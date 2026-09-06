@@ -571,7 +571,7 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
               <div>
-                <h4 className="text-sm font-semibold">Product</h4>
+                <h3 className="text-sm font-semibold">Product</h3>
                 <ul className="mt-4 space-y-2.5 text-sm text-muted">
                   <li><a href="#features" className="hover:text-foreground">Features</a></li>
                   <li><a href="#products" className="hover:text-foreground">Savings</a></li>
@@ -579,7 +579,7 @@ export default function Home() {
                 </ul>
               </div>
               <div>
-                <h4 className="text-sm font-semibold">Resources</h4>
+                <h3 className="text-sm font-semibold">Resources</h3>
                 <ul className="mt-4 space-y-2.5 text-sm text-muted">
                   <li><a href="https://developers.stellar.org/docs/build/smart-contracts" className="hover:text-foreground">Stellar Docs</a></li>
                   <li><a href="https://developers.stellar.org/docs/build/smart-contracts" className="hover:text-foreground">Soroban</a></li>
@@ -587,7 +587,7 @@ export default function Home() {
                 </ul>
               </div>
               <div>
-                <h4 className="text-sm font-semibold">Community</h4>
+                <h3 className="text-sm font-semibold">Community</h3>
                 <ul className="mt-4 space-y-2.5 text-sm text-muted">
                   <li><a href="https://github.com/stowp/Stow" className="hover:text-foreground">GitHub</a></li>
                   <li><a href="https://github.com/stowp/Stow/issues" className="hover:text-foreground">Issues</a></li>
