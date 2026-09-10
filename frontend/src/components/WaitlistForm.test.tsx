@@ -3,6 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import WaitlistForm from "./WaitlistForm";
 import * as api from "@/lib/api";
+import { expectNoSeriousViolations } from "@/test/axe";
 
 describe("WaitlistForm", () => {
   beforeEach(() => {
@@ -216,6 +217,22 @@ describe("WaitlistForm", () => {
 
       await user.click(button);
       expect(input).toHaveAttribute("aria-invalid", "true");
+    });
+
+    it("reports no serious axe violations in the idle state", async () => {
+      const { container } = render(<WaitlistForm />);
+      await expectNoSeriousViolations(container);
+    });
+
+    it("reports no serious axe violations when a validation error is shown", async () => {
+      const user = userEvent.setup();
+      const { container } = render(<WaitlistForm />);
+
+      const input = screen.getByLabelText(/email address/i);
+      await user.type(input, "invalid");
+      await user.click(screen.getByRole("button", { name: /join waitlist/i }));
+
+      await expectNoSeriousViolations(container);
     });
   });
 

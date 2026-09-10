@@ -54,7 +54,7 @@ export default function Navbar() {
           : "border-b border-transparent"
       }`}
     >
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 sm:px-8">
+      <nav aria-label="Primary" className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 sm:px-8">
         <a href="#top" className="flex items-center font-semibold tracking-tight text-foreground">
           <Logo />
         </a>

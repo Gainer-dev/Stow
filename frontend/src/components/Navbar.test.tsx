@@ -3,6 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Navbar from "./Navbar";
 import { ThemeProvider } from "@/context/ThemeProvider";
+import { expectNoSeriousViolations } from "@/test/axe";
 
 function renderNavbar() {
   return render(
@@ -288,9 +289,16 @@ describe("Navbar", () => {
     });
 
     it("cleans up IntersectionObserver on unmount", () => {
+      // The scroll-spy observer is only created when a tracked section exists.
+      const section = document.createElement("section");
+      section.id = "features";
+      document.body.appendChild(section);
+
       const { unmount } = renderNavbar();
       unmount();
       expect(mockDisconnect).toHaveBeenCalled();
+
+      section.remove();
     });
   });
 
@@ -362,6 +370,22 @@ describe("Navbar", () => {
       renderNavbar();
       expect(screen.getByRole("banner")).toBeInTheDocument();
       expect(screen.getByRole("navigation")).toBeInTheDocument();
+    });
+
+    it("reports no serious axe violations", async () => {
+      const { container } = renderNavbar();
+      await expectNoSeriousViolations(container);
+    });
+
+    it("reports no serious axe violations when the mobile menu is open", async () => {
+      const user = userEvent.setup();
+      const { container } = renderNavbar();
+      await user.click(screen.getByRole("button", { name: /toggle menu/i }));
+      expect(screen.getByRole("button", { name: /toggle menu/i })).toHaveAttribute(
+        "aria-expanded",
+        "true",
+      );
+      await expectNoSeriousViolations(container);
     });
   });
 });

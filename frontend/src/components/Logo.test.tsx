@@ -37,7 +37,10 @@ describe("Logo", () => {
       </div>,
     );
     const wordmark = screen.getByText("Stow");
-    expect(wordmark).toHaveStyle({ color: "currentColor" });
+    // `currentColor` resolves to the inherited (container) text color, so the
+    // wordmark must pick up the red set on the wrapping div rather than a fixed
+    // color of its own.
+    expect(wordmark).toHaveStyle({ color: "rgb(255, 0, 0)" });
   });
 
   it("renders distinct gradient ids across multiple instances on the same page", () => {
