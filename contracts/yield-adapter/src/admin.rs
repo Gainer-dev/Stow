@@ -1,0 +1,132 @@
+//! Initialization and admin configuration.
+
+use soroban_sdk::{Address, BytesN, Env};
+
+use crate::error::Error;
+
+/// Initialize the adapter.
+///
+/// - Stores `admin`, `treasury`, and the `token` (SEP-41, e.g. USDC) address
+///   — `token` must match the upstream `savings-vault`'s token.
+/// - Seeds id counters, `TotalShares`, and `FeesAccrued` at `0`.
+/// - Must be callable exactly once; subsequent calls -> `Error::AlreadyInitialized`.
+/// - Emits an `init` event carrying [`crate::events::EVENT_SCHEMA_VERSION`].
+///
+/// Acceptance: after init, `admin()`, `treasury()`, and `token()` return the
+/// given values; `total_assets()` and `total_shares()` both return `0`.
+///
+/// TODO(issue): implement — see `savings-vault::admin::initialize` for the
+/// reference shape (init-guard check, instance writes, event).
+pub fn initialize(
+    _env: &Env,
+    _admin: Address,
+    _treasury: Address,
+    _token: Address,
+) -> Result<(), Error> {
+    unimplemented!("admin: initialize")
+}
+
+/// Return the configured admin address, or `Error::NotInitialized`.
+pub fn admin(_env: &Env) -> Result<Address, Error> {
+    unimplemented!("admin: admin")
+}
+
+/// Return the configured treasury address, or `Error::NotInitialized`.
+pub fn treasury(_env: &Env) -> Result<Address, Error> {
+    unimplemented!("admin: treasury")
+}
+
+/// Return the configured vault token, or `Error::NotInitialized`.
+pub fn token(_env: &Env) -> Result<Address, Error> {
+    unimplemented!("admin: token")
+}
+
+/// Rotate the admin. Requires `require_auth` from the current admin.
+///
+/// TODO(issue): implement — mirrors `savings-vault::admin::set_admin`. Emit
+/// `admin_set`.
+pub fn set_admin(_env: &Env, _new_admin: Address) -> Result<(), Error> {
+    unimplemented!("admin: set_admin")
+}
+
+/// Change the treasury address that receives collected performance fees.
+/// Admin-only.
+///
+/// - Requires `require_auth` from the current admin.
+/// - Does **not** sweep already-accrued fees to the new treasury — call
+///   `withdraw_fees` beforehand if that matters for the transition.
+///
+/// TODO(issue): implement.
+pub fn set_treasury(_env: &Env, _caller: Address, _new_treasury: Address) -> Result<(), Error> {
+    unimplemented!("admin: set_treasury")
+}
+
+/// The performance fee, in basis points (0-10_000), charged only on positive
+/// yield at `harvest` time. Defaults to `0` before ever set.
+pub fn performance_fee_bps(_env: &Env) -> u32 {
+    unimplemented!("admin: performance_fee_bps")
+}
+
+/// Set the performance fee. Admin-only.
+///
+/// - Requires `require_auth` from the current admin.
+/// - Errors `Error::FeeTooHigh` if `bps > 3_000` (30%) — see
+///   `fees` module doc for why this cap exists.
+/// - Takes effect on the *next* `harvest` call; does not retroactively
+///   apply to yield already reported.
+///
+/// TODO(issue): implement.
+pub fn set_performance_fee_bps(_env: &Env, _caller: Address, _bps: u32) -> Result<(), Error> {
+    unimplemented!("admin: set_performance_fee_bps")
+}
+
+/// Set the emergency-pause flag. Admin-only.
+///
+/// While paused, `deposit`, `request_withdraw`, `harvest`, and strategy
+/// mutations reject with `Error::Paused`; `claim_withdraw` and reads remain
+/// available so users already mid-withdrawal are never trapped by a pause.
+///
+/// TODO(issue): implement — mirrors `savings-vault::admin::set_paused`, but
+/// note the narrower blocklist above (deliberately different from
+/// `savings-vault`, which pauses all mutations).
+pub fn set_paused(_env: &Env, _caller: Address, _paused: bool) -> Result<(), Error> {
+    unimplemented!("admin: set_paused")
+}
+
+/// Whether the contract is currently paused. Defaults to `false` if unset.
+pub fn is_paused(_env: &Env) -> bool {
+    unimplemented!("admin: is_paused")
+}
+
+/// Guard for mutating entrypoints: returns `Error::Paused` while paused.
+pub fn require_not_paused(_env: &Env) -> Result<(), Error> {
+    unimplemented!("admin: require_not_paused")
+}
+
+/// Cooldown, in seconds, `request_withdraw` must wait before
+/// `claim_withdraw` is permitted. Defaults to `0` (no cooldown) if unset.
+pub fn withdraw_cooldown(_env: &Env) -> u64 {
+    unimplemented!("admin: withdraw_cooldown")
+}
+
+/// Set the withdrawal cooldown. Admin-only.
+///
+/// - Requires `require_auth` from the current admin.
+/// - Only affects requests created *after* the change; in-flight
+///   `WithdrawRequest`s keep the `claimable_at` computed at request time.
+///
+/// TODO(issue): implement.
+pub fn set_withdraw_cooldown(_env: &Env, _caller: Address, _seconds: u64) -> Result<(), Error> {
+    unimplemented!("admin: set_withdraw_cooldown")
+}
+
+/// Upgrade the contract's Wasm executable to `new_wasm_hash`. Admin-only.
+///
+/// Same trust trade-off as `savings-vault::admin::upgrade` (see that
+/// function's doc comment): the admin key can replace contract logic
+/// outright, including custody rules. Storage is not migrated automatically.
+///
+/// TODO(issue): implement.
+pub fn upgrade(_env: &Env, _caller: Address, _new_wasm_hash: BytesN<32>) -> Result<(), Error> {
+    unimplemented!("admin: upgrade")
+}
