@@ -1,0 +1,47 @@
+//! Performance fee collection.
+//!
+//! Fees accrue in `DataKey::FeesAccrued` as `harvest` reports positive yield
+//! (see `harvest::apply_performance_fee`) and are swept to the treasury on
+//! demand via `withdraw_fees`, rather than transferred automatically on
+//! every `harvest` — batching sweeps keeps `harvest` (the more
+//! latency-sensitive, keeper-called path) cheaper.
+
+use soroban_sdk::{Address, Env};
+
+use crate::error::Error;
+
+/// Maximum performance fee, in basis points. Enforced by
+/// `admin::set_performance_fee_bps`; documented here because it is a
+/// property of the fee *model*, not the admin-config plumbing.
+pub const MAX_PERFORMANCE_FEE_BPS: u32 = 3_000; // 30%
+
+/// Validate a proposed performance fee. Errors `Error::FeeTooHigh` if
+/// `bps > MAX_PERFORMANCE_FEE_BPS`.
+///
+/// TODO(issue): implement.
+pub fn validate_fee_bps(_bps: u32) -> Result<(), Error> {
+    unimplemented!("fees: validate_fee_bps")
+}
+
+/// Read the current accrued-and-unswept fee balance.
+///
+/// TODO(issue): implement.
+pub fn fees_accrued(_env: &Env) -> i128 {
+    unimplemented!("fees: fees_accrued")
+}
+
+/// Sweep all accrued fees to the treasury. Callable by anyone (funds only
+/// ever move to the fixed `treasury` address, so there is nothing to gain by
+/// restricting the caller — same reasoning as `harvest`'s permissionless
+/// design).
+///
+/// - Errors `Error::NoFeesAccrued` if the accrued balance is `0`.
+/// - Resets `DataKey::FeesAccrued` to `0` before transferring, so a
+///   reentrant call from a hostile token contract cannot double-spend the
+///   swept amount.
+/// - Emits a `fee_collected` event.
+///
+/// TODO(issue): implement.
+pub fn withdraw_fees(_env: &Env, _caller: Address) -> Result<i128, Error> {
+    unimplemented!("fees: withdraw_fees")
+}
