@@ -113,6 +113,7 @@ fn unauthorized_access_rejected() {
 }
 
 #[test]
+#[ignore = "TODO(issue): implement withdraw::request_withdraw NotFound path"]
 fn withdraw_more_shares_than_owned_rejected() {
     let env = Env::default();
     env.mock_all_auths();
@@ -139,4 +140,22 @@ fn strategy_migration_preserves_total_assets() {
 #[ignore = "TODO(issue): property test — share/asset rounding never allows value extraction"]
 fn share_rounding_never_allows_value_extraction() {
     todo!("proptest: for arbitrary sequences of deposit/request_withdraw/claim_withdraw, assert sum of payouts never exceeds sum of deposits plus harvested yield");
+}
+
+#[test]
+#[ignore = "TODO(issue): implement strategy::register_strategy duplicate-address guard"]
+fn register_strategy_rejects_duplicate_address() {
+    todo!("register a strategy address, register the same address again, assert Error::StrategyAlreadyRegistered");
+}
+
+#[test]
+#[ignore = "TODO(issue): implement admin::set_paused narrower blocklist"]
+fn paused_blocks_mutations_but_not_claim_withdraw() {
+    todo!("pause, assert deposit/request_withdraw/harvest all reject with Error::Paused, then assert an in-flight claim_withdraw still succeeds");
+}
+
+#[test]
+#[ignore = "TODO(issue): implement admin::initialize guard"]
+fn initialize_twice_rejected() {
+    todo!("initialize, call initialize again, assert Error::AlreadyInitialized");
 }
